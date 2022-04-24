@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.edwinderepuesto.jpclient.R
 import com.edwinderepuesto.jpclient.databinding.FragmentItemListBinding
 import com.edwinderepuesto.jpclient.databinding.ItemListContentBinding
-import com.edwinderepuesto.jpclient.placeholder.PlaceholderContent
+import com.edwinderepuesto.jpclient.presentation.placeholder.PlaceholderContent
 
 /**
  * A Fragment representing a list of Pings. This fragment
