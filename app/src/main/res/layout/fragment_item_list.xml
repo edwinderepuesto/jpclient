@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Adding the same root's ID for view binding as other layout configurations -->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,12 +10,35 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/item_list"
-        android:name="com.edwinderepuesto.jpclient.ItemListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_height="0dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.edwinderepuesto.jpclient.ItemDetailHostActivity"
+        app:layout_constraintBottom_toTopOf="@id/status_text_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".presentation.ItemDetailHostActivity"
         tools:listitem="@layout/item_list_content" />
+
+    <TextView
+        android:id="@+id/status_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/dismiss_link"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Status" />
+
+    <TextView
+        android:id="@+id/dismiss_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/dismiss_all"
+        android:textColor="#FA0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/status_text_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

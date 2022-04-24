@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">jpclient</string>
+    <string name="app_name">JP Client</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="dismiss_all">[Dismiss All]</string>
+    <string name="post_thumbnail">Post icon</string>
+    <string name="star_emoji">⭐</string>
+    <string name="cross_mark_emoji">❌</string>
 </resources>

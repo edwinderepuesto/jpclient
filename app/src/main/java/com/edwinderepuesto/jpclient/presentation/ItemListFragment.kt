@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
@@ -95,20 +96,20 @@ class ItemListFragment : Fragment() {
         private val values: List<PlaceholderContent.PlaceholderItem>,
         private val itemDetailFragmentContainer: View?
     ) :
-        RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
+        RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.PostItemViewHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
 
             val binding =
                 ItemListContentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return ViewHolder(binding)
+            return PostItemViewHolder(binding)
 
         }
 
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: PostItemViewHolder, position: Int) {
             val item = values[position]
-            holder.idView.text = item.id
-            holder.contentView.text = item.content
+            holder.titleTextView.text = item.id
+            holder.bodyTextView.text = item.content
 
             with(holder.itemView) {
                 tag = item
@@ -131,10 +132,13 @@ class ItemListFragment : Fragment() {
 
         override fun getItemCount() = values.size
 
-        inner class ViewHolder(binding: ItemListContentBinding) :
+        inner class PostItemViewHolder(binding: ItemListContentBinding) :
             RecyclerView.ViewHolder(binding.root) {
-            val idView: TextView = binding.idText
-            val contentView: TextView = binding.content
+            val titleTextView: TextView = binding.titleTextView
+            val bodyTextView: TextView = binding.bodyTextView
+            val favoriteIndicatorView: TextView = binding.favoriteIndicatorView
+            val dismissPostButton: TextView = binding.dismissPostButton
+            val thumbnailImageView: ImageView = binding.thumbnailImageView
         }
 
     }
