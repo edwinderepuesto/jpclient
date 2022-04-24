@@ -1,4 +1,4 @@
-package com.edwinderepuesto.jpclient
+package com.edwinderepuesto.jpclient.presentation
 
 import android.content.ClipData
 import android.os.Bundle
@@ -25,7 +25,7 @@ class ItemDetailFragment : Fragment() {
      */
     private var item: PlaceholderContent.PlaceholderItem? = null
 
-    lateinit var itemDetailTextView: TextView
+    private lateinit var itemDetailTextView: TextView
     private var toolbarLayout: CollapsingToolbarLayout? = null
 
     private var _binding: FragmentItemDetailBinding? = null
@@ -34,7 +34,7 @@ class ItemDetailFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val dragListener = View.OnDragListener { v, event ->
+    private val dragListener = View.OnDragListener { _, event ->
         if (event.action == DragEvent.ACTION_DROP) {
             val clipDataItem: ClipData.Item = event.clipData.getItemAt(0)
             val dragData = clipDataItem.text
@@ -60,7 +60,7 @@ class ItemDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentItemDetailBinding.inflate(inflater, container, false)
         val rootView = binding.root

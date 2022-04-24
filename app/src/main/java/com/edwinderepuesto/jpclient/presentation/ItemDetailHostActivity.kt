@@ -1,4 +1,4 @@
-package com.edwinderepuesto.jpclient
+package com.edwinderepuesto.jpclient.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.edwinderepuesto.jpclient.R
 import com.edwinderepuesto.jpclient.databinding.ActivityItemDetailBinding
 
 class ItemDetailHostActivity : AppCompatActivity() {

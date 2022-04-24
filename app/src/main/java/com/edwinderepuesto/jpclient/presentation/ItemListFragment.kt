@@ -1,8 +1,5 @@
-package com.edwinderepuesto.jpclient
+package com.edwinderepuesto.jpclient.presentation
 
-import android.content.ClipData
-import android.content.ClipDescription
-import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -14,9 +11,10 @@ import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.edwinderepuesto.jpclient.placeholder.PlaceholderContent;
+import com.edwinderepuesto.jpclient.R
 import com.edwinderepuesto.jpclient.databinding.FragmentItemListBinding
 import com.edwinderepuesto.jpclient.databinding.ItemListContentBinding
+import com.edwinderepuesto.jpclient.placeholder.PlaceholderContent
 
 /**
  * A Fragment representing a list of Pings. This fragment
@@ -43,14 +41,12 @@ class ItemListFragment : Fragment() {
                     "Undo (Ctrl + Z) shortcut triggered",
                     Toast.LENGTH_LONG
                 ).show()
-                true
             } else if (event.keyCode == KeyEvent.KEYCODE_F && event.isCtrlPressed) {
                 Toast.makeText(
                     v.context,
                     "Find (Ctrl + F) shortcut triggered",
                     Toast.LENGTH_LONG
                 ).show()
-                true
             }
             false
         }
@@ -64,7 +60,7 @@ class ItemListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentItemListBinding.inflate(inflater, container, false)
         return binding.root
@@ -117,60 +113,17 @@ class ItemListFragment : Fragment() {
             with(holder.itemView) {
                 tag = item
                 setOnClickListener { itemView ->
-                    val item = itemView.tag as PlaceholderContent.PlaceholderItem
+                    val clickedItem = itemView.tag as PlaceholderContent.PlaceholderItem
                     val bundle = Bundle()
                     bundle.putString(
                         ItemDetailFragment.ARG_ITEM_ID,
-                        item.id
+                        clickedItem.id
                     )
                     if (itemDetailFragmentContainer != null) {
                         itemDetailFragmentContainer.findNavController()
                             .navigate(R.id.fragment_item_detail, bundle)
                     } else {
                         itemView.findNavController().navigate(R.id.show_item_detail, bundle)
-                    }
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    /**
-                     * Context click listener to handle Right click events
-                     * from mice and trackpad input to provide a more native
-                     * experience on larger screen devices
-                     */
-                    setOnContextClickListener { v ->
-                        val item = v.tag as PlaceholderContent.PlaceholderItem
-                        Toast.makeText(
-                            v.context,
-                            "Context click of item " + item.id,
-                            Toast.LENGTH_LONG
-                        ).show()
-                        true
-                    }
-                }
-
-                setOnLongClickListener { v ->
-                    // Setting the item id as the clip data so that the drop target is able to
-                    // identify the id of the content
-                    val clipItem = ClipData.Item(item.id)
-                    val dragData = ClipData(
-                        v.tag as? CharSequence,
-                        arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN),
-                        clipItem
-                    )
-
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        v.startDragAndDrop(
-                            dragData,
-                            View.DragShadowBuilder(v),
-                            null,
-                            0
-                        )
-                    } else {
-                        v.startDrag(
-                            dragData,
-                            View.DragShadowBuilder(v),
-                            null,
-                            0
-                        )
                     }
                 }
             }
