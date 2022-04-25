@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
@@ -19,6 +20,7 @@ import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.databinding.FragmentPostListBinding
 import com.edwinderepuesto.jpclient.databinding.ItemPostBinding
 import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModel
+import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
 
 /**
@@ -31,6 +33,10 @@ import kotlinx.coroutines.launch
  */
 
 class PostListFragment : Fragment() {
+    private lateinit var viewModelFactory: MainViewModelFactory
+
+    private lateinit var viewModel: MainViewModel
+
     private var _binding: FragmentPostListBinding? = null
 
     // This property is only valid between onCreateView and
@@ -41,6 +47,9 @@ class PostListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModelFactory = MainViewModelFactory()
+
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         _binding = FragmentPostListBinding.inflate(inflater, container, false)
         return binding.root
@@ -60,8 +69,6 @@ class PostListFragment : Fragment() {
         )
 
         binding.itemList.adapter = adapter
-
-        val viewModel = MainViewModel()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
