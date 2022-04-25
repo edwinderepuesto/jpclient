@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/item_list_fragment"
-        android:name="com.edwinderepuesto.jpclient.presentation.ItemListFragment"
+        android:name="com.edwinderepuesto.jpclient.presentation.PostListFragment"
         android:label="ItemListFragment">
         <action
             android:id="@+id/show_item_detail"
@@ -15,9 +15,9 @@
     </fragment>
     <fragment
         android:id="@+id/item_detail_fragment"
-        android:name="com.edwinderepuesto.jpclient.presentation.ItemDetailFragment"
+        android:name="com.edwinderepuesto.jpclient.presentation.PostDetailsFragment"
         android:label="item_detail"
-        tools:layout="@layout/fragment_item_detail">
+        tools:layout="@layout/fragment_post_details">
         <argument
             android:name="item_id"
             android:defaultValue=""

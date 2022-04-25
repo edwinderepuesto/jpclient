@@ -13,8 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.edwinderepuesto.jpclient.R
-import com.edwinderepuesto.jpclient.databinding.FragmentItemListBinding
-import com.edwinderepuesto.jpclient.databinding.ItemListContentBinding
+import com.edwinderepuesto.jpclient.databinding.FragmentPostListBinding
+import com.edwinderepuesto.jpclient.databinding.ItemPostBinding
 import com.edwinderepuesto.jpclient.presentation.placeholder.PlaceholderContent
 
 /**
@@ -26,7 +26,7 @@ import com.edwinderepuesto.jpclient.presentation.placeholder.PlaceholderContent
  * item details side-by-side using two vertical panes.
  */
 
-class ItemListFragment : Fragment() {
+class PostListFragment : Fragment() {
 
     /**
      * Method to intercept global key events in the
@@ -52,7 +52,7 @@ class ItemListFragment : Fragment() {
             false
         }
 
-    private var _binding: FragmentItemListBinding? = null
+    private var _binding: FragmentPostListBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -63,7 +63,7 @@ class ItemListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentItemListBinding.inflate(inflater, container, false)
+        _binding = FragmentPostListBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -101,7 +101,7 @@ class ItemListFragment : Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
 
             val binding =
-                ItemListContentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return PostItemViewHolder(binding)
 
         }
@@ -117,7 +117,7 @@ class ItemListFragment : Fragment() {
                     val clickedItem = itemView.tag as PlaceholderContent.PlaceholderItem
                     val bundle = Bundle()
                     bundle.putString(
-                        ItemDetailFragment.ARG_ITEM_ID,
+                        PostDetailsFragment.ARG_ITEM_ID,
                         clickedItem.id
                     )
                     if (itemDetailFragmentContainer != null) {
@@ -132,7 +132,7 @@ class ItemListFragment : Fragment() {
 
         override fun getItemCount() = values.size
 
-        inner class PostItemViewHolder(binding: ItemListContentBinding) :
+        inner class PostItemViewHolder(binding: ItemPostBinding) :
             RecyclerView.ViewHolder(binding.root) {
             val titleTextView: TextView = binding.titleTextView
             val bodyTextView: TextView = binding.bodyTextView

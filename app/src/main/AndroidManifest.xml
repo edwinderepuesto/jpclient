@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jpclient">
         <activity
-            android:name=".presentation.ItemDetailHostActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:resizeableActivity="true"
             tools:targetApi="24">
