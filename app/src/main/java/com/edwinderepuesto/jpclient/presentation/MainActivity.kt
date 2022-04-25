@@ -10,7 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.edwinderepuesto.jpclient.R
 import com.edwinderepuesto.jpclient.data.api.JsonPlaceholderApi
-import com.edwinderepuesto.jpclient.databinding.ActivityItemDetailBinding
+import com.edwinderepuesto.jpclient.databinding.ActivityMainBinding
 import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -25,7 +25,7 @@ class ItemDetailHostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityItemDetailBinding.inflate(layoutInflater)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navHostFragment =
