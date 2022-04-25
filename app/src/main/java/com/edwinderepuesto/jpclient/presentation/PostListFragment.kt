@@ -58,7 +58,7 @@ class PostListFragment : Fragment() {
         // layout configuration (layout, layout-sw600dp)
         val itemDetailFragmentContainer: View? = view.findViewById(R.id.item_detail_nav_container)
 
-        val adapter = SimpleItemRecyclerViewAdapter(
+        val adapter = PostRecyclerViewAdapter(
             emptyList(),
             itemDetailFragmentContainer,
         )
@@ -91,11 +91,11 @@ class PostListFragment : Fragment() {
         }
     }
 
-    class SimpleItemRecyclerViewAdapter(
+    class PostRecyclerViewAdapter(
         private var values: List<Post>,
         private val itemDetailFragmentContainer: View?
     ) :
-        RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.PostItemViewHolder>() {
+        RecyclerView.Adapter<PostRecyclerViewAdapter.PostItemViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
 
