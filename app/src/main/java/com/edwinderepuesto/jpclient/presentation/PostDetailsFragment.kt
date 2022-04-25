@@ -1,15 +1,13 @@
 package com.edwinderepuesto.jpclient.presentation
 
-import android.content.ClipData
 import android.os.Bundle
-import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.databinding.FragmentPostDetailsBinding
-import com.edwinderepuesto.jpclient.presentation.placeholder.PlaceholderContent
 import com.google.android.material.appbar.CollapsingToolbarLayout
 
 /**
@@ -20,13 +18,15 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
  */
 class PostDetailsFragment : Fragment() {
 
-    /**
-     * The placeholder content this fragment is presenting.
-     */
-    private var item: PlaceholderContent.PlaceholderItem? = null
+    private var clickedPost: Post? = null
 
     private lateinit var itemDetailTextView: TextView
     private var toolbarLayout: CollapsingToolbarLayout? = null
+
+    private var postId: String = ""
+    private var postTitle: String = ""
+    private var postBody: String = ""
+    private var postUserId: String = ""
 
     private var _binding: FragmentPostDetailsBinding? = null
 
@@ -34,26 +34,14 @@ class PostDetailsFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val dragListener = View.OnDragListener { _, event ->
-        if (event.action == DragEvent.ACTION_DROP) {
-            val clipDataItem: ClipData.Item = event.clipData.getItemAt(0)
-            val dragData = clipDataItem.text
-            item = PlaceholderContent.ITEM_MAP[dragData]
-            updateContent()
-        }
-        true
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            if (it.containsKey(ARG_ITEM_ID)) {
-                // Load the placeholder content specified by the fragment
-                // arguments. In a real-world scenario, use a Loader
-                // to load content from a content provider.
-                item = PlaceholderContent.ITEM_MAP[it.getString(ARG_ITEM_ID)]
-            }
+            postId = it.getString(ARG_POST_ID).toString()
+            postTitle = it.getString(ARG_POST_TITLE).toString()
+            postBody = it.getString(ARG_POST_BODY).toString()
+            postUserId = it.getString(ARG_POST_USER_ID).toString()
         }
     }
 
@@ -69,30 +57,26 @@ class PostDetailsFragment : Fragment() {
         itemDetailTextView = binding.itemDetail
 
         updateContent()
-        rootView.setOnDragListener(dragListener)
 
         return rootView
     }
 
     private fun updateContent() {
-        toolbarLayout?.title = item?.content
-
-        // Show the placeholder content as text in a TextView.
-        item?.let {
-            itemDetailTextView.text = it.details
+        clickedPost?.let {
+            toolbarLayout?.title = it.title
+            itemDetailTextView.text = it.body
         }
-    }
-
-    companion object {
-        /**
-         * The fragment argument representing the item ID that this fragment
-         * represents.
-         */
-        const val ARG_ITEM_ID = "item_id"
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val ARG_POST_ID = "ARG_POST_ID"
+        const val ARG_POST_TITLE = "ARG_POST_TITLE"
+        const val ARG_POST_BODY = "ARG_POST_BODY"
+        const val ARG_POST_USER_ID = "ARG_POST_USER_ID"
     }
 }

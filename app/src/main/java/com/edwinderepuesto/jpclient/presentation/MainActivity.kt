@@ -9,7 +9,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.edwinderepuesto.jpclient.R
 import com.edwinderepuesto.jpclient.databinding.ActivityMainBinding
-import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,8 +25,6 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        MainViewModel()
     }
 
     override fun onSupportNavigateUp(): Boolean {

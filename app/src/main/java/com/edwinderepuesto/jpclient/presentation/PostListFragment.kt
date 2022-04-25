@@ -1,5 +1,6 @@
 package com.edwinderepuesto.jpclient.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -10,12 +11,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.edwinderepuesto.jpclient.R
+import com.edwinderepuesto.jpclient.common.MyResult
+import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.databinding.FragmentPostListBinding
 import com.edwinderepuesto.jpclient.databinding.ItemPostBinding
-import com.edwinderepuesto.jpclient.presentation.placeholder.PlaceholderContent
+import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 /**
  * A Fragment representing a list of Pings. This fragment
@@ -73,27 +80,47 @@ class PostListFragment : Fragment() {
 
         ViewCompat.addOnUnhandledKeyEventListener(view, unhandledKeyEventListenerCompat)
 
-        val recyclerView: RecyclerView = binding.itemList
-
         // Leaving this not using view binding as it relies on if the view is visible the current
         // layout configuration (layout, layout-sw600dp)
         val itemDetailFragmentContainer: View? = view.findViewById(R.id.item_detail_nav_container)
 
-        setupRecyclerView(recyclerView, itemDetailFragmentContainer)
-    }
-
-    private fun setupRecyclerView(
-        recyclerView: RecyclerView,
-        itemDetailFragmentContainer: View?
-    ) {
-
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(
-            PlaceholderContent.ITEMS, itemDetailFragmentContainer
+        val adapter = SimpleItemRecyclerViewAdapter(
+            emptyList(),
+            itemDetailFragmentContainer,
         )
+
+        binding.itemList.adapter = adapter
+
+        val viewModel = MainViewModel()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { result ->
+                    when (result) {
+                        is MyResult.Success -> {
+                            adapter.updateDataSet(result.data)
+                            binding.statusTextView.text = getString(R.string.done)
+                        }
+                        is MyResult.Loading -> {
+                            binding.statusTextView.text =
+                                getString(
+                                    if (result.loading)
+                                        R.string.fetching_posts
+                                    else
+                                        R.string.idle
+                                )
+                        }
+                        is MyResult.Error -> {
+                            binding.statusTextView.text = result.errorMessage
+                        }
+                    }
+                }
+            }
+        }
     }
 
     class SimpleItemRecyclerViewAdapter(
-        private val values: List<PlaceholderContent.PlaceholderItem>,
+        private var values: List<Post>,
         private val itemDetailFragmentContainer: View?
     ) :
         RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.PostItemViewHolder>() {
@@ -108,29 +135,44 @@ class PostListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PostItemViewHolder, position: Int) {
             val item = values[position]
-            holder.titleTextView.text = item.id
-            holder.bodyTextView.text = item.content
+            holder.titleTextView.text = item.title
+            holder.bodyTextView.text = item.body
 
-            with(holder.itemView) {
-                tag = item
-                setOnClickListener { itemView ->
-                    val clickedItem = itemView.tag as PlaceholderContent.PlaceholderItem
-                    val bundle = Bundle()
-                    bundle.putString(
-                        PostDetailsFragment.ARG_ITEM_ID,
-                        clickedItem.id
-                    )
-                    if (itemDetailFragmentContainer != null) {
-                        itemDetailFragmentContainer.findNavController()
-                            .navigate(R.id.fragment_item_detail, bundle)
-                    } else {
-                        itemView.findNavController().navigate(R.id.show_item_detail, bundle)
-                    }
+            holder.itemView.setOnClickListener { itemView ->
+                val bundle = Bundle()
+                bundle.putString(
+                    PostDetailsFragment.ARG_POST_ID,
+                    item.id
+                )
+                bundle.putString(
+                    PostDetailsFragment.ARG_POST_TITLE,
+                    item.title
+                )
+                bundle.putString(
+                    PostDetailsFragment.ARG_POST_BODY,
+                    item.body
+                )
+                bundle.putString(
+                    PostDetailsFragment.ARG_POST_USER_ID,
+                    item.userId
+                )
+
+                if (itemDetailFragmentContainer != null) {
+                    itemDetailFragmentContainer.findNavController()
+                        .navigate(R.id.fragment_item_detail, bundle)
+                } else {
+                    itemView.findNavController().navigate(R.id.show_item_detail, bundle)
                 }
             }
         }
 
         override fun getItemCount() = values.size
+
+        @SuppressLint("NotifyDataSetChanged")
+        fun updateDataSet(newData: List<Post>) {
+            values = newData
+            notifyDataSetChanged()
+        }
 
         inner class PostItemViewHolder(binding: ItemPostBinding) :
             RecyclerView.ViewHolder(binding.root) {
