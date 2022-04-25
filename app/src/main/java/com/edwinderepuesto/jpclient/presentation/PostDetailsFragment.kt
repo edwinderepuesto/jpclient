@@ -73,7 +73,20 @@ class PostDetailsFragment : Fragment() {
                 viewModel.commentsState.collect { result ->
                     when (result) {
                         is MyResult.Success -> {
-                            adapter.updateDataSet(result.data)
+                            adapter.updateCommentsDataSet(result.data)
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userState.collect { result ->
+                    when (result) {
+                        is MyResult.Success -> {
+                            binding.detailAuthorTextView.text =
+                                "${result.data.name} (${result.data.username} - ${result.data.email})"
                         }
                     }
                 }
@@ -111,7 +124,7 @@ class PostDetailsFragment : Fragment() {
         override fun getItemCount() = values.size
 
         @SuppressLint("NotifyDataSetChanged")
-        fun updateDataSet(newData: List<PostComment>) {
+        fun updateCommentsDataSet(newData: List<PostComment>) {
             values = newData
             notifyDataSetChanged()
         }
