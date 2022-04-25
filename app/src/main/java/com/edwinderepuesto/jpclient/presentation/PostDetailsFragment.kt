@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.edwinderepuesto.jpclient.databinding.FragmentPostDetailsBinding
-import com.google.android.material.appbar.CollapsingToolbarLayout
 
 /**
  * A fragment representing a single Item detail screen.
@@ -16,9 +14,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
  * on handsets.
  */
 class PostDetailsFragment : Fragment() {
-    private lateinit var itemDetailTextView: TextView
-    private var toolbarLayout: CollapsingToolbarLayout? = null
-
     private var postId: String = ""
     private var postTitle: String = ""
     private var postBody: String = ""
@@ -49,17 +44,14 @@ class PostDetailsFragment : Fragment() {
         _binding = FragmentPostDetailsBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
-        toolbarLayout = binding.toolbarLayout
-        itemDetailTextView = binding.itemDetail
-
         updateContent()
 
         return rootView
     }
 
     private fun updateContent() {
-        toolbarLayout?.title = postTitle
-        itemDetailTextView.text = postBody
+        binding.detailTitleTextView.text = postTitle
+        binding.detailBodyTextView.text = postBody
     }
 
     override fun onDestroyView() {
