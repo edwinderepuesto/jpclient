@@ -56,6 +56,8 @@ class PostDetailsFragment : Fragment() {
 
         viewModel.fetchComments(postId)
 
+        viewModel.fetchUser(postUserId)
+
         return rootView
     }
 

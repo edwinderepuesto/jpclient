@@ -7,6 +7,7 @@ import com.edwinderepuesto.jpclient.common.MyResult
 import com.edwinderepuesto.jpclient.data.api.JsonPlaceholderApi
 import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.data.dto.PostComment
+import com.edwinderepuesto.jpclient.data.dto.User
 import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -28,8 +29,13 @@ class MainViewModel : ViewModel() {
         MutableStateFlow<MyResult<List<PostComment>>>(MyResult.Loading(false))
     val commentsState: StateFlow<MyResult<List<PostComment>>> = _commentsState.asStateFlow()
 
+    private val _userState =
+        MutableStateFlow<MyResult<User>>(MyResult.Loading(false))
+    val userState: StateFlow<MyResult<User>> = _userState.asStateFlow()
+
     private var postsJob: Job? = null
     private var commentsJob: Job? = null
+    private var userJob: Job? = null
 
     private val apiClient = JsonPlaceholderApi(HttpClient {
         install(ContentNegotiation) {
@@ -95,6 +101,30 @@ class MainViewModel : ViewModel() {
                 Log.d("ktor", "Error fetching comments:")
                 ioException.printStackTrace()
                 _commentsState.update {
+                    MyResult.Error(ioException.message ?: "Unknown error")
+                }
+            }
+        }
+    }
+
+    fun fetchUser(userId: Int) {
+        userJob?.cancel()
+
+        userJob = viewModelScope.launch {
+            try {
+                _userState.update {
+                    MyResult.Loading(true)
+                }
+
+                val user = apiClient.getUserById(userId)
+
+                _userState.update {
+                    MyResult.Success(user)
+                }
+            } catch (ioException: IOException) {
+                Log.d("ktor", "Error fetching user:")
+                ioException.printStackTrace()
+                _userState.update {
                     MyResult.Error(ioException.message ?: "Unknown error")
                 }
             }
