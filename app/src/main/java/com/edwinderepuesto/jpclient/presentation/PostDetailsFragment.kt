@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.edwinderepuesto.jpclient.databinding.FragmentPostDetailsBinding
+import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModel
+import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModelFactory
 
 /**
  * A fragment representing a single Item detail screen.
@@ -14,10 +17,13 @@ import com.edwinderepuesto.jpclient.databinding.FragmentPostDetailsBinding
  * on handsets.
  */
 class PostDetailsFragment : Fragment() {
-    private var postId: String = ""
+    private lateinit var viewModelFactory: MainViewModelFactory
+    private lateinit var viewModel: MainViewModel
+
+    private var postId: Int = -1
+    private var postUserId: Int = -1
     private var postTitle: String = ""
     private var postBody: String = ""
-    private var postUserId: String = ""
 
     private var _binding: FragmentPostDetailsBinding? = null
 
@@ -29,10 +35,10 @@ class PostDetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            postId = it.getString(ARG_POST_ID).toString()
+            postId = it.getInt(ARG_POST_ID)
+            postUserId = it.getInt(ARG_POST_USER_ID)
             postTitle = it.getString(ARG_POST_TITLE).toString()
             postBody = it.getString(ARG_POST_BODY).toString()
-            postUserId = it.getString(ARG_POST_USER_ID).toString()
         }
     }
 
@@ -40,11 +46,15 @@ class PostDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModelFactory = MainViewModelFactory()
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         _binding = FragmentPostDetailsBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
         updateContent()
+
+        viewModel.fetchComments(postId)
 
         return rootView
     }

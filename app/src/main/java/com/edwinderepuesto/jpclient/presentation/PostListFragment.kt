@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -24,17 +23,14 @@ import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.launch
 
 /**
- * A Fragment representing a list of Pings. This fragment
- * has different presentations for handset and larger screen devices. On
- * handsets, the fragment presents a list of items, which when touched,
- * lead to a {@link PostDetailsFragment} representing
- * item details. On larger screens, the Navigation controller presents the list of items and
- * item details side-by-side using two vertical panes.
+ * This fragment has different presentations for handset and larger screen devices. On handsets, the
+ * fragment presents a list of items, which when touched, lead to a {@link ItemDetailFragment}
+ * representing item details. On larger screens, the Navigation controller presents the list of
+ * items and item details side-by-side using two vertical panes.
  */
 
 class PostListFragment : Fragment() {
     private lateinit var viewModelFactory: MainViewModelFactory
-
     private lateinit var viewModel: MainViewModel
 
     private var _binding: FragmentPostListBinding? = null
@@ -48,7 +44,6 @@ class PostListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModelFactory = MainViewModelFactory()
-
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         _binding = FragmentPostListBinding.inflate(inflater, container, false)
@@ -72,7 +67,7 @@ class PostListFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { result ->
+                viewModel.postsState.collect { result ->
                     when (result) {
                         is MyResult.Success -> {
                             adapter.updateDataSet(result.data)
@@ -117,9 +112,13 @@ class PostListFragment : Fragment() {
 
             holder.itemView.setOnClickListener { itemView ->
                 val bundle = Bundle()
-                bundle.putString(
+                bundle.putInt(
                     PostDetailsFragment.ARG_POST_ID,
                     item.id
+                )
+                bundle.putInt(
+                    PostDetailsFragment.ARG_POST_USER_ID,
+                    item.userId
                 )
                 bundle.putString(
                     PostDetailsFragment.ARG_POST_TITLE,
@@ -128,10 +127,6 @@ class PostListFragment : Fragment() {
                 bundle.putString(
                     PostDetailsFragment.ARG_POST_BODY,
                     item.body
-                )
-                bundle.putString(
-                    PostDetailsFragment.ARG_POST_USER_ID,
-                    item.userId
                 )
 
                 if (itemDetailFragmentContainer != null) {
@@ -155,9 +150,6 @@ class PostListFragment : Fragment() {
             RecyclerView.ViewHolder(binding.root) {
             val titleTextView: TextView = binding.titleTextView
             val bodyTextView: TextView = binding.bodyTextView
-            val favoriteIndicatorView: TextView = binding.favoriteIndicatorView
-            val dismissPostButton: TextView = binding.dismissPostButton
-            val thumbnailImageView: ImageView = binding.thumbnailImageView
         }
 
     }
