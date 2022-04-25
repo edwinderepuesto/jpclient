@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.databinding.FragmentPostDetailsBinding
 import com.google.android.material.appbar.CollapsingToolbarLayout
 
@@ -17,9 +16,6 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
  * on handsets.
  */
 class PostDetailsFragment : Fragment() {
-
-    private var clickedPost: Post? = null
-
     private lateinit var itemDetailTextView: TextView
     private var toolbarLayout: CollapsingToolbarLayout? = null
 
@@ -62,10 +58,8 @@ class PostDetailsFragment : Fragment() {
     }
 
     private fun updateContent() {
-        clickedPost?.let {
-            toolbarLayout?.title = it.title
-            itemDetailTextView.text = it.body
-        }
+        toolbarLayout?.title = postTitle
+        itemDetailTextView.text = postBody
     }
 
     override fun onDestroyView() {

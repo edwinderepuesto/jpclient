@@ -129,9 +129,9 @@ class PostListFragment : Fragment() {
 
                 if (itemDetailFragmentContainer != null) {
                     itemDetailFragmentContainer.findNavController()
-                        .navigate(R.id.fragment_item_detail, bundle)
+                        .navigate(R.id.fragment_post_details, bundle)
                 } else {
-                    itemView.findNavController().navigate(R.id.show_item_detail, bundle)
+                    itemView.findNavController().navigate(R.id.show_post_details, bundle)
                 }
             }
         }
