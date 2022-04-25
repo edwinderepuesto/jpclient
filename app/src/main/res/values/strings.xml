@@ -8,5 +8,6 @@
     <string name="done">Done</string>
     <string name="idle">Idle</string>
     <string name="fetching_posts">Fetching posts…</string>
+    <string name="fetching_user_info">Fetching user info…</string>
     <string name="details">Details</string>
 </resources>

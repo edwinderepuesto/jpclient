@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import com.edwinderepuesto.jpclient.R
 import com.edwinderepuesto.jpclient.common.MyResult
 import com.edwinderepuesto.jpclient.data.dto.PostComment
 import com.edwinderepuesto.jpclient.databinding.FragmentPostDetailsBinding
@@ -84,9 +85,21 @@ class PostDetailsFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.userState.collect { result ->
                     when (result) {
+                        is MyResult.Loading -> {
+                            binding.detailsUserTextView.text =
+                                getString(
+                                    if (result.loading)
+                                        R.string.fetching_user_info
+                                    else
+                                        R.string.idle
+                                )
+                        }
                         is MyResult.Success -> {
-                            binding.detailAuthorTextView.text =
+                            binding.detailsUserTextView.text =
                                 "${result.data.name} (${result.data.username} - ${result.data.email})"
+                        }
+                        is MyResult.Error -> {
+                            binding.detailsUserTextView.text = result.errorMessage
                         }
                     }
                 }
@@ -101,8 +114,8 @@ class PostDetailsFragment : Fragment() {
     }
 
     private fun updateContent() {
-        binding.detailTitleTextView.text = postTitle
-        binding.detailBodyTextView.text = postBody
+        binding.detailsTitleTextView.text = postTitle
+        binding.detailsBodyTextView.text = postBody
     }
 
     class CommentRecyclerViewAdapter(private var values: List<PostComment>) :
