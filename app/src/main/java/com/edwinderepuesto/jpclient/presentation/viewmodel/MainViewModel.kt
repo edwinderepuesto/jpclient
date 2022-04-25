@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.edwinderepuesto.jpclient.common.MyResult
-import com.edwinderepuesto.jpclient.data.api.JsonPlaceholderApi
 import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.data.dto.PostComment
 import com.edwinderepuesto.jpclient.data.dto.User
+import com.edwinderepuesto.jpclient.data.repository.MainRepository
 import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -19,9 +19,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
-class MainViewModel : ViewModel() {
+class MainViewModel(private val repository: MainRepository) : ViewModel() {
     private val _postsState = MutableStateFlow<MyResult<List<Post>>>(MyResult.Loading(false))
     val postsState: StateFlow<MyResult<List<Post>>> = _postsState.asStateFlow()
 
@@ -37,24 +36,6 @@ class MainViewModel : ViewModel() {
     private var commentsJob: Job? = null
     private var userJob: Job? = null
 
-    private val apiClient = JsonPlaceholderApi(HttpClient {
-        install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
-        }
-        install(Logging) {
-            logger = object : Logger {
-                override fun log(message: String) {
-                    Log.v("Ktor Logger ->", message)
-                }
-            }
-            level = LogLevel.ALL
-        }
-    })
-
     init {
         fetchPosts()
     }
@@ -68,7 +49,7 @@ class MainViewModel : ViewModel() {
                     MyResult.Loading(true)
                 }
 
-                val posts = apiClient.getPosts()
+                val posts = repository.getPosts()
 
                 _postsState.update {
                     MyResult.Success(posts)
@@ -92,7 +73,7 @@ class MainViewModel : ViewModel() {
                     MyResult.Loading(true)
                 }
 
-                val comments = apiClient.getCommentsByPostId(postId)
+                val comments = repository.getCommentsByPostId(postId)
 
                 _commentsState.update {
                     MyResult.Success(comments)
@@ -116,7 +97,7 @@ class MainViewModel : ViewModel() {
                     MyResult.Loading(true)
                 }
 
-                val user = apiClient.getUserById(userId)
+                val user = repository.getUserById(userId)
 
                 _userState.update {
                     MyResult.Success(user)
