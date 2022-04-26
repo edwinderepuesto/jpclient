@@ -3,11 +3,12 @@
     <string name="title_item_detail">Item Detail</string>
     <string name="dismiss_all">[Dismiss All]</string>
     <string name="post_thumbnail">Post icon</string>
-    <string name="star_emoji">⭐</string>
     <string name="cross_mark_emoji">❌</string>
     <string name="done">Done</string>
     <string name="idle">Idle</string>
     <string name="fetching_posts">Fetching posts…</string>
     <string name="fetching_user_info">Fetching user info…</string>
     <string name="details">Details</string>
+    <string name="star_emoji_empty">☆</string>
+    <string name="star_emoji_filled">★</string>
 </resources>

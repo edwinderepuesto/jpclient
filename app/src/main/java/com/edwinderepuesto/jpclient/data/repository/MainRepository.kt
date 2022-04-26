@@ -60,4 +60,8 @@ class MainRepository(
     suspend fun getUserById(userId: Int): User {
         return jsonPlaceholderApi.getUserById(userId)
     }
+
+    suspend fun updatePost(post: Post) {
+        postDao.insertAll(listOf(post))
+    }
 }

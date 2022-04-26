@@ -8,7 +8,7 @@ import com.edwinderepuesto.jpclient.data.dto.Post
 
 @Dao
 interface PostDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(posts: List<Post>)
 
     @Query("SELECT * FROM post")

@@ -108,4 +108,11 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
             }
         }
     }
+
+    fun toggleFavoriteStatus(post: Post) {
+        post.isFavorite = !post.isFavorite
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updatePost(post)
+        }
+    }
 }

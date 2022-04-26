@@ -20,4 +20,6 @@ data class Post(
 
     @SerialName("body")
     val body: String,
-)
+) {
+    var isFavorite: Boolean = false
+}

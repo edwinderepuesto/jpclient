@@ -42,9 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
-        android:text="@string/star_emoji"
         app:layout_constraintEnd_toStartOf="@id/body_text_view"
-        app:layout_constraintTop_toBottomOf="@id/title_text_view" />
+        app:layout_constraintTop_toBottomOf="@id/title_text_view"
+        tools:text="@string/star_emoji_filled" />
 
     <TextView
         android:id="@+id/body_text_view"

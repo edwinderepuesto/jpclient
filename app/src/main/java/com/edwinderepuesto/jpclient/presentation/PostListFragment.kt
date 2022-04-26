@@ -61,6 +61,7 @@ class PostListFragment : Fragment() {
         val adapter = PostRecyclerViewAdapter(
             emptyList(),
             itemDetailFragmentContainer,
+            ::toggleFavoriteStatus
         )
 
         binding.itemList.adapter = adapter
@@ -91,10 +92,16 @@ class PostListFragment : Fragment() {
         }
     }
 
+    private fun toggleFavoriteStatus(post: Post) {
+        viewModel.toggleFavoriteStatus(post)
+    }
+
     class PostRecyclerViewAdapter(
         private var values: List<Post>,
-        private val itemDetailFragmentContainer: View?
-    ) :
+        private val itemDetailFragmentContainer: View?,
+        private val onFavoriteClick: (Post) -> Unit,
+
+        ) :
         RecyclerView.Adapter<PostRecyclerViewAdapter.PostItemViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
@@ -105,10 +112,27 @@ class PostListFragment : Fragment() {
 
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         override fun onBindViewHolder(holder: PostItemViewHolder, position: Int) {
             val item = values[position]
+
             holder.titleTextView.text = item.title
             holder.bodyTextView.text = item.body
+
+            holder.favoriteIndicatorView.apply {
+                text = context.getString(
+                    if (item.isFavorite) {
+                        R.string.star_emoji_filled
+                    } else {
+                        R.string.star_emoji_empty
+                    }
+                )
+
+                setOnClickListener {
+                    onFavoriteClick(item)
+                    notifyDataSetChanged()
+                }
+            }
 
             holder.itemView.setOnClickListener { itemView ->
                 val bundle = Bundle()
@@ -150,6 +174,7 @@ class PostListFragment : Fragment() {
             RecyclerView.ViewHolder(binding.root) {
             val titleTextView: TextView = binding.titleTextView
             val bodyTextView: TextView = binding.bodyTextView
+            val favoriteIndicatorView: TextView = binding.favoriteIndicatorView
         }
 
     }
