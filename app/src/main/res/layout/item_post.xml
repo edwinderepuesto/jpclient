@@ -7,14 +7,14 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="20dp">
 
-    <ImageView
-        android:id="@+id/thumbnail_image_view"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:contentDescription="@string/post_thumbnail"
-        app:layout_constraintBottom_toBottomOf="@id/title_text_view"
+    <TextView
+        android:id="@+id/favorite_indicator_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/title_text_view" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/star_emoji_filled" />
 
     <TextView
         android:id="@+id/title_text_view"
@@ -23,9 +23,21 @@
         android:layout_marginStart="10dp"
         android:textColor="#000"
         app:layout_constraintEnd_toStartOf="@id/dismiss_post_button"
-        app:layout_constraintStart_toEndOf="@id/thumbnail_image_view"
+        app:layout_constraintStart_toEndOf="@id/favorite_indicator_view"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Title" />
+
+    <TextView
+        android:id="@+id/body_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:textColor="#777"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/favorite_indicator_view"
+        app:layout_constraintTop_toBottomOf="@id/title_text_view"
+        tools:text="Post body" />
 
     <TextView
         android:id="@+id/dismiss_post_button"
@@ -35,25 +47,4 @@
         android:text="@string/cross_mark_emoji"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/title_text_view" />
-
-    <TextView
-        android:id="@+id/favorite_indicator_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toStartOf="@id/body_text_view"
-        app:layout_constraintTop_toBottomOf="@id/title_text_view"
-        tools:text="@string/star_emoji_filled" />
-
-    <TextView
-        android:id="@+id/body_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="#777"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/thumbnail_image_view"
-        app:layout_constraintTop_toBottomOf="@id/title_text_view"
-        tools:text="Post body" />
 </androidx.constraintlayout.widget.ConstraintLayout>
