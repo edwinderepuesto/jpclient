@@ -29,6 +29,9 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
         MutableStateFlow<MyResult<User>>(MyResult.Loading(false))
     val userState: StateFlow<MyResult<User>> = _userState.asStateFlow()
 
+    private val _selectedPost = MutableStateFlow<Post?>(null)
+    val selectedPost: StateFlow<Post?> = _selectedPost.asStateFlow()
+
     private var postsJob: Job? = null
     private var commentsJob: Job? = null
     private var userJob: Job? = null
@@ -61,16 +64,17 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
         }
     }
 
-    fun fetchComments(postId: Int) {
-        commentsJob?.cancel()
+    fun fetchSelectedPostDetails() {
+        val selectedPost = _selectedPost.value ?: return
 
+        commentsJob?.cancel()
         commentsJob = viewModelScope.launch(Dispatchers.IO) {
             try {
                 _commentsState.update {
                     MyResult.Loading(true)
                 }
 
-                val comments = repository.getCommentsByPostId(postId)
+                val comments = repository.getCommentsByPostId(selectedPost.id)
 
                 _commentsState.update {
                     MyResult.Success(comments)
@@ -83,18 +87,15 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
                 }
             }
         }
-    }
 
-    fun fetchUser(userId: Int) {
         userJob?.cancel()
-
         userJob = viewModelScope.launch(Dispatchers.IO) {
             try {
                 _userState.update {
                     MyResult.Loading(true)
                 }
 
-                val user = repository.getUserById(userId)
+                val user = repository.getUserById(selectedPost.userId)
 
                 _userState.update {
                     MyResult.Success(user)
@@ -129,6 +130,12 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
     fun clearPostsDataSet() {
         _postsState.update {
             MyResult.Success(emptyList())
+        }
+    }
+
+    fun markPostAsSelected(post: Post) {
+        _selectedPost.update {
+            post
         }
     }
 }

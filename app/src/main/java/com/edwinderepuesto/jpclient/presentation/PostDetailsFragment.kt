@@ -28,13 +28,7 @@ import kotlinx.coroutines.launch
  * on handsets.
  */
 class PostDetailsFragment : Fragment() {
-    private lateinit var viewModelFactory: MainViewModelFactory
     private lateinit var viewModel: MainViewModel
-
-    private var postId: Int = -1
-    private var postUserId: Int = -1
-    private var postTitle: String = ""
-    private var postBody: String = ""
 
     private var _binding: FragmentPostDetailsBinding? = null
 
@@ -42,32 +36,30 @@ class PostDetailsFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            postId = it.getInt(ARG_POST_ID)
-            postUserId = it.getInt(ARG_POST_USER_ID)
-            postTitle = it.getString(ARG_POST_TITLE).toString()
-            postBody = it.getString(ARG_POST_BODY).toString()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModelFactory = MainViewModelFactory(requireContext())
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        val viewModelFactory = MainViewModelFactory(requireActivity())
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
         _binding = FragmentPostDetailsBinding.inflate(inflater, container, false)
         val rootView = binding.root
 
-        updateContent()
-
         val adapter = CommentRecyclerViewAdapter(emptyList())
 
         binding.commentsRecyclerView.adapter = adapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.selectedPost.collect { selectedPost ->
+                    binding.detailsTitleTextView.text =
+                        selectedPost?.title ?: getString(R.string.click_post_for_details)
+                    binding.detailsBodyTextView.text = selectedPost?.body ?: ""
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -106,16 +98,9 @@ class PostDetailsFragment : Fragment() {
             }
         }
 
-        viewModel.fetchComments(postId)
-
-        viewModel.fetchUser(postUserId)
+        viewModel.fetchSelectedPostDetails()
 
         return rootView
-    }
-
-    private fun updateContent() {
-        binding.detailsTitleTextView.text = postTitle
-        binding.detailsBodyTextView.text = postBody
     }
 
     class CommentRecyclerViewAdapter(private var values: List<PostComment>) :
@@ -154,10 +139,4 @@ class PostDetailsFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        const val ARG_POST_ID = "ARG_POST_ID"
-        const val ARG_POST_TITLE = "ARG_POST_TITLE"
-        const val ARG_POST_BODY = "ARG_POST_BODY"
-        const val ARG_POST_USER_ID = "ARG_POST_USER_ID"
-    }
 }

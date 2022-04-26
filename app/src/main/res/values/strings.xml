@@ -11,4 +11,5 @@
     <string name="details">Details</string>
     <string name="star_emoji_empty">☆</string>
     <string name="star_emoji_filled">★</string>
+    <string name="click_post_for_details">Click on a Post to see its details here</string>
 </resources>

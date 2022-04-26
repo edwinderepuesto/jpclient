@@ -33,7 +33,6 @@ import kotlinx.coroutines.launch
  */
 
 class PostListFragment : Fragment() {
-    private lateinit var viewModelFactory: MainViewModelFactory
     private lateinit var viewModel: MainViewModel
 
     private var _binding: FragmentPostListBinding? = null
@@ -46,8 +45,9 @@ class PostListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModelFactory = MainViewModelFactory(requireContext())
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        val viewModelFactory = MainViewModelFactory(requireActivity())
+        viewModel =
+            ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
 
         _binding = FragmentPostListBinding.inflate(inflater, container, false)
         return binding.root
@@ -68,6 +68,7 @@ class PostListFragment : Fragment() {
         val adapter = PostRecyclerViewAdapter(
             emptyList(),
             itemDetailFragmentContainer,
+            ::markPostAsSelected,
             ::toggleFavoriteStatus,
             ::dismissPost
         )
@@ -107,6 +108,10 @@ class PostListFragment : Fragment() {
         }
     }
 
+    private fun markPostAsSelected(post: Post) {
+        viewModel.markPostAsSelected(post)
+    }
+
     private fun toggleFavoriteStatus(post: Post) {
         viewModel.toggleFavoriteStatus(post)
     }
@@ -128,8 +133,9 @@ class PostListFragment : Fragment() {
     class PostRecyclerViewAdapter(
         private var values: List<Post>,
         private val itemDetailFragmentContainer: View?,
-        private val onFavoriteClick: (Post) -> Unit,
-        private val onDismissPost: (Int, View) -> Unit
+        private val onClickPost: (Post) -> Unit,
+        private val onClickFavoriteButton: (Post) -> Unit,
+        private val onClickDismissButton: (Int, View) -> Unit
     ) :
         RecyclerView.Adapter<PostRecyclerViewAdapter.PostItemViewHolder>() {
 
@@ -158,39 +164,23 @@ class PostListFragment : Fragment() {
                 )
 
                 setOnClickListener {
-                    onFavoriteClick(item)
+                    onClickFavoriteButton(item)
                     notifyDataSetChanged()
                 }
             }
 
             holder.dismissPostButton.setOnClickListener {
-                onDismissPost(item.id, holder.itemView)
+                onClickDismissButton(item.id, holder.itemView)
             }
 
             holder.itemView.setOnClickListener { itemView ->
-                val bundle = Bundle()
-                bundle.putInt(
-                    PostDetailsFragment.ARG_POST_ID,
-                    item.id
-                )
-                bundle.putInt(
-                    PostDetailsFragment.ARG_POST_USER_ID,
-                    item.userId
-                )
-                bundle.putString(
-                    PostDetailsFragment.ARG_POST_TITLE,
-                    item.title
-                )
-                bundle.putString(
-                    PostDetailsFragment.ARG_POST_BODY,
-                    item.body
-                )
+                onClickPost(item)
 
                 if (itemDetailFragmentContainer != null) {
                     itemDetailFragmentContainer.findNavController()
-                        .navigate(R.id.fragment_post_details, bundle)
+                        .navigate(R.id.fragment_post_details)
                 } else {
-                    itemView.findNavController().navigate(R.id.show_post_details, bundle)
+                    itemView.findNavController().navigate(R.id.show_post_details)
                 }
             }
         }
