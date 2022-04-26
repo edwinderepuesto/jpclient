@@ -44,9 +44,13 @@ class MainRepository(
     private val jsonPlaceholderApi = JsonPlaceholderApi(httpClient)
 
     suspend fun getPosts(): List<Post> {
-        val posts = jsonPlaceholderApi.getPosts()
-        postDao.insertAll(posts)
-        return posts
+        val storedPosts = postDao.loadAllPosts()
+
+        return storedPosts.ifEmpty {
+            val posts = jsonPlaceholderApi.getPosts()
+            postDao.insertAll(posts)
+            posts
+        }
     }
 
     suspend fun getCommentsByPostId(postId: Int): List<PostComment> {
