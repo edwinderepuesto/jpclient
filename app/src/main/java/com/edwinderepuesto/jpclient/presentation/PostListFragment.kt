@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -20,6 +22,7 @@ import com.edwinderepuesto.jpclient.databinding.FragmentPostListBinding
 import com.edwinderepuesto.jpclient.databinding.ItemPostBinding
 import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModel
 import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -61,7 +64,8 @@ class PostListFragment : Fragment() {
         val adapter = PostRecyclerViewAdapter(
             emptyList(),
             itemDetailFragmentContainer,
-            ::toggleFavoriteStatus
+            ::toggleFavoriteStatus,
+            ::dismissPost
         )
 
         binding.itemList.adapter = adapter
@@ -90,18 +94,36 @@ class PostListFragment : Fragment() {
                 }
             }
         }
+
+        binding.dismissLink.setOnClickListener {
+            dismissAllPosts()
+        }
     }
 
     private fun toggleFavoriteStatus(post: Post) {
         viewModel.toggleFavoriteStatus(post)
     }
 
+    private fun dismissPost(postIdToDelete: Int, itemHolderView: View) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            itemHolderView.slideOutRightAndWaitUntilFinished()
+            viewModel.removePostIdFromDataSet(postIdToDelete)
+        }
+    }
+
+    private fun dismissAllPosts() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding.itemList.slideOutRightAndWaitUntilFinished()
+            viewModel.clearPostsDataSet()
+        }
+    }
+
     class PostRecyclerViewAdapter(
         private var values: List<Post>,
         private val itemDetailFragmentContainer: View?,
         private val onFavoriteClick: (Post) -> Unit,
-
-        ) :
+        private val onDismissPost: (Int, View) -> Unit
+    ) :
         RecyclerView.Adapter<PostRecyclerViewAdapter.PostItemViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder {
@@ -132,6 +154,10 @@ class PostListFragment : Fragment() {
                     onFavoriteClick(item)
                     notifyDataSetChanged()
                 }
+            }
+
+            holder.dismissPostButton.setOnClickListener {
+                onDismissPost(item.id, holder.itemView)
             }
 
             holder.itemView.setOnClickListener { itemView ->
@@ -175,6 +201,7 @@ class PostListFragment : Fragment() {
             val titleTextView: TextView = binding.titleTextView
             val bodyTextView: TextView = binding.bodyTextView
             val favoriteIndicatorView: TextView = binding.favoriteIndicatorView
+            val dismissPostButton: TextView = binding.dismissPostButton
         }
 
     }
@@ -182,5 +209,17 @@ class PostListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private suspend fun View.slideOutRightAndWaitUntilFinished() {
+        val animationMillis = 100L
+
+        val slideOutAnimation: Animation = AnimationUtils.loadAnimation(
+            this.context,
+            android.R.anim.slide_out_right
+        )
+        slideOutAnimation.duration = animationMillis
+        this.startAnimation(slideOutAnimation)
+        delay(animationMillis)
     }
 }

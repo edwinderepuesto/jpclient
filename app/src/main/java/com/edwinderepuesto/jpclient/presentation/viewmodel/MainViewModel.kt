@@ -115,4 +115,20 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
             repository.updatePost(post)
         }
     }
+
+    fun removePostIdFromDataSet(postIdToDelete: Int) {
+        (_postsState.value as? MyResult.Success)?.let { value ->
+            val reducedList = value.data.toMutableList()
+            reducedList.removeIf { item -> item.id == postIdToDelete }
+            _postsState.update {
+                MyResult.Success(reducedList)
+            }
+        }
+    }
+
+    fun clearPostsDataSet() {
+        _postsState.update {
+            MyResult.Success(emptyList())
+        }
+    }
 }
