@@ -54,11 +54,11 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
                 _postsState.update {
                     MyResult.Success(posts)
                 }
-            } catch (ioException: IOException) {
+            } catch (exception: Exception) {
                 Log.d("ktor", "Error fetching posts:")
-                ioException.printStackTrace()
+                exception.printStackTrace()
                 _postsState.update {
-                    MyResult.Error(ioException.message ?: "Unknown error")
+                    MyResult.Error(exception.message ?: "Unknown error")
                 }
             }
         }
@@ -79,11 +79,11 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
                 _commentsState.update {
                     MyResult.Success(comments)
                 }
-            } catch (ioException: IOException) {
+            } catch (exception: Exception) {
                 Log.d("ktor", "Error fetching comments:")
-                ioException.printStackTrace()
+                exception.printStackTrace()
                 _commentsState.update {
-                    MyResult.Error(ioException.message ?: "Unknown error")
+                    MyResult.Error(exception.message ?: "Unknown error")
                 }
             }
         }
@@ -100,11 +100,11 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
                 _userState.update {
                     MyResult.Success(user)
                 }
-            } catch (ioException: IOException) {
+            } catch (exception: Exception) {
                 Log.d("ktor", "Error fetching user:")
-                ioException.printStackTrace()
+                exception.printStackTrace()
                 _userState.update {
-                    MyResult.Error(ioException.message ?: "Unknown error")
+                    MyResult.Error(exception.message ?: "Unknown error")
                 }
             }
         }
