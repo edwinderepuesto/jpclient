@@ -57,7 +57,7 @@ class PostDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModelFactory = MainViewModelFactory()
+        viewModelFactory = MainViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         _binding = FragmentPostDetailsBinding.inflate(inflater, container, false)

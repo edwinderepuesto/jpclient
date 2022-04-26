@@ -43,7 +43,7 @@ class PostListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModelFactory = MainViewModelFactory()
+        viewModelFactory = MainViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
 
         _binding = FragmentPostListBinding.inflate(inflater, container, false)

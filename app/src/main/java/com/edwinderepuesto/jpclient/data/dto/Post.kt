@@ -1,10 +1,14 @@
 package com.edwinderepuesto.jpclient.data.dto
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Entity
 @Serializable
 data class Post(
+    @PrimaryKey
     @SerialName("id")
     val id: Int,
 

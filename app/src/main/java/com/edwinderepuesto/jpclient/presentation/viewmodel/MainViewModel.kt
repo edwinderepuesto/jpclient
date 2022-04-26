@@ -8,11 +8,8 @@ import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.data.dto.PostComment
 import com.edwinderepuesto.jpclient.data.dto.User
 import com.edwinderepuesto.jpclient.data.repository.MainRepository
-import io.ktor.client.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.errors.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +40,7 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
     private fun fetchPosts() {
         postsJob?.cancel()
 
-        postsJob = viewModelScope.launch {
+        postsJob = viewModelScope.launch(Dispatchers.IO) {
             try {
                 _postsState.update {
                     MyResult.Loading(true)
@@ -67,7 +64,7 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
     fun fetchComments(postId: Int) {
         commentsJob?.cancel()
 
-        commentsJob = viewModelScope.launch {
+        commentsJob = viewModelScope.launch(Dispatchers.IO) {
             try {
                 _commentsState.update {
                     MyResult.Loading(true)
@@ -91,7 +88,7 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
     fun fetchUser(userId: Int) {
         userJob?.cancel()
 
-        userJob = viewModelScope.launch {
+        userJob = viewModelScope.launch(Dispatchers.IO) {
             try {
                 _userState.update {
                     MyResult.Loading(true)

@@ -1,7 +1,10 @@
 package com.edwinderepuesto.jpclient.data.repository
 
+import android.content.Context
 import android.util.Log
+import androidx.room.Room
 import com.edwinderepuesto.jpclient.data.api.JsonPlaceholderApi
+import com.edwinderepuesto.jpclient.data.database.AppDatabase
 import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.data.dto.PostComment
 import com.edwinderepuesto.jpclient.data.dto.User
@@ -10,8 +13,16 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import java.lang.ref.WeakReference
 
-class MainRepository {
+class MainRepository(
+    contextRef: WeakReference<Context>,
+) {
+    private val postDao = Room.databaseBuilder(
+        contextRef.get()!!,
+        AppDatabase::class.java, "jpclient-db"
+    ).build().postDao()
+
     private val httpClient = HttpClient {
         install(ContentNegotiation) {
             json(Json {
@@ -33,7 +44,9 @@ class MainRepository {
     private val jsonPlaceholderApi = JsonPlaceholderApi(httpClient)
 
     suspend fun getPosts(): List<Post> {
-        return jsonPlaceholderApi.getPosts()
+        val posts = jsonPlaceholderApi.getPosts()
+        postDao.insertAll(posts)
+        return posts
     }
 
     suspend fun getCommentsByPostId(postId: Int): List<PostComment> {
