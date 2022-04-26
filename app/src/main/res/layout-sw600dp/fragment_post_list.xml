@@ -5,18 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/item_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingHorizontal="20dp"
-        app:layoutManager="LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/status_text_view"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:context=".presentation.ItemDetailHostActivity"
-        tools:listitem="@layout/item_post" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingHorizontal="20dp"
+            app:layoutManager="LinearLayoutManager"
+            tools:context=".presentation.ItemDetailHostActivity"
+            tools:listitem="@layout/item_post" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/status_text_view"

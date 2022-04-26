@@ -57,6 +57,10 @@ class PostListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.fetchPosts()
+        }
+
         // Leaving this not using view binding as it relies on if the view is visible the current
         // layout configuration (layout, layout-sw600dp)
         val itemDetailFragmentContainer: View? = view.findViewById(R.id.item_detail_nav_container)
@@ -74,10 +78,6 @@ class PostListFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.postsState.collect { result ->
                     when (result) {
-                        is MyResult.Success -> {
-                            adapter.updateDataSet(result.data)
-                            binding.statusTextView.text = getString(R.string.done)
-                        }
                         is MyResult.Loading -> {
                             binding.statusTextView.text =
                                 getString(
@@ -86,9 +86,16 @@ class PostListFragment : Fragment() {
                                     else
                                         R.string.idle
                                 )
+                            binding.swipeRefreshLayout.isRefreshing = result.loading
+                        }
+                        is MyResult.Success -> {
+                            adapter.updateDataSet(result.data)
+                            binding.statusTextView.text = getString(R.string.done)
+                            binding.swipeRefreshLayout.isRefreshing = false
                         }
                         is MyResult.Error -> {
                             binding.statusTextView.text = result.errorMessage
+                            binding.swipeRefreshLayout.isRefreshing = false
                         }
                     }
                 }

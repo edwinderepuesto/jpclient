@@ -37,7 +37,7 @@ class MainViewModel(private val repository: MainRepository) : ViewModel() {
         fetchPosts()
     }
 
-    private fun fetchPosts() {
+    fun fetchPosts() {
         postsJob?.cancel()
 
         postsJob = viewModelScope.launch(Dispatchers.IO) {
