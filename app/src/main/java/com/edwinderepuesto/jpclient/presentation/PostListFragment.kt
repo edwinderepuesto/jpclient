@@ -35,6 +35,8 @@ import kotlinx.coroutines.launch
 class PostListFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
 
+    private lateinit var adapter: PostRecyclerViewAdapter
+
     private var _binding: FragmentPostListBinding? = null
 
     // This property is only valid between onCreateView and
@@ -65,7 +67,7 @@ class PostListFragment : Fragment() {
         // layout configuration (layout, layout-sw600dp)
         val itemDetailFragmentContainer: View? = view.findViewById(R.id.item_detail_nav_container)
 
-        val adapter = PostRecyclerViewAdapter(
+        adapter = PostRecyclerViewAdapter(
             emptyList(),
             itemDetailFragmentContainer,
             ::markPostAsSelected,
@@ -76,7 +78,7 @@ class PostListFragment : Fragment() {
         binding.itemList.adapter = adapter
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.postsState.collect { result ->
                     when (result) {
                         is MyResult.Loading -> {
@@ -113,6 +115,8 @@ class PostListFragment : Fragment() {
     }
 
     private fun toggleFavoriteStatus(post: Post) {
+        post.isFavorite = !post.isFavorite
+        adapter.refreshDataSet()
         viewModel.toggleFavoriteStatus(post)
     }
 
@@ -165,7 +169,6 @@ class PostListFragment : Fragment() {
 
                 setOnClickListener {
                     onClickFavoriteButton(item)
-                    notifyDataSetChanged()
                 }
             }
 
@@ -189,8 +192,14 @@ class PostListFragment : Fragment() {
 
         @SuppressLint("NotifyDataSetChanged")
         fun updateDataSet(newData: List<Post>) {
-            values = newData
+            values = newData.sortedBy {
+                !it.isFavorite
+            }
             notifyDataSetChanged()
+        }
+
+        fun refreshDataSet() {
+            updateDataSet(values)
         }
 
         inner class PostItemViewHolder(binding: ItemPostBinding) :

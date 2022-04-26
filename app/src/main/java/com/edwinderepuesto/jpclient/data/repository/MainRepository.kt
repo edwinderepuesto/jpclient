@@ -61,7 +61,7 @@ class MainRepository(
         return jsonPlaceholderApi.getUserById(userId)
     }
 
-    suspend fun updatePost(post: Post) {
+    fun updatePost(post: Post) {
         postDao.insertAll(listOf(post))
     }
 }
