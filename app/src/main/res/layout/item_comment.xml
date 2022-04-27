@@ -5,25 +5,35 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="20dp">
+    android:padding="10dp">
 
     <TextView
-        android:id="@+id/comment_body_text_view"
+        android:id="@+id/comment_name_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Comment body" />
+        tools:text="Comment name" />
 
     <TextView
-        android:id="@+id/comment_details_text_view"
+        android:id="@+id/comment_body_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#777"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/comment_name_text_view"
+        tools:text="Comment body" />
+
+    <TextView
+        android:id="@+id/comment_email_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="#00F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/comment_body_text_view"
-        tools:text="Comment details" />
+        tools:text="Comment email" />
 </androidx.constraintlayout.widget.ConstraintLayout>

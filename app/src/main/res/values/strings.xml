@@ -8,8 +8,10 @@
     <string name="idle">Idle</string>
     <string name="fetching_posts">Fetching posts…</string>
     <string name="fetching_user_info">Fetching user info…</string>
+    <string name="fetching_comments">Fetching comments…</string>
     <string name="details">Details</string>
     <string name="star_emoji_empty">☆</string>
     <string name="star_emoji_filled">★</string>
     <string name="click_post_for_details">Click on a Post to see its details here</string>
+    <string name="comments">Comments</string>
 </resources>

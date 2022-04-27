@@ -37,9 +37,19 @@
             style="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="10dp"
             app:layout_constraintTop_toBottomOf="@id/details_user_text_view"
             tools:text="Sample body" />
+
+        <TextView
+            android:id="@+id/details_comments_text_view"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="#000"
+            app:layout_constraintTop_toBottomOf="@id/details_body_text_view"
+            tools:text="Comments title or status" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comments_recycler_view"
@@ -47,7 +57,7 @@
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/details_body_text_view"
+            app:layout_constraintTop_toBottomOf="@id/details_comments_text_view"
             tools:context=".presentation.ItemDetailHostActivity"
             tools:listitem="@layout/item_comment" />
 

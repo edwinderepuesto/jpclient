@@ -63,8 +63,20 @@ class PostDetailsFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.commentsState.collect { result ->
                     when (result) {
+                        is MyResult.Loading -> {
+                            binding.detailsCommentsTextView.text =
+                                if (result.loading) {
+                                    getString(R.string.fetching_comments)
+                                } else {
+                                    ""
+                                }
+                        }
                         is MyResult.Success -> {
                             adapter.updateCommentsDataSet(result.data)
+                            binding.detailsCommentsTextView.text = getString(R.string.comments)
+                        }
+                        is MyResult.Error -> {
+                            binding.detailsCommentsTextView.text = result.errorMessage
                         }
                     }
                 }
@@ -114,7 +126,9 @@ class PostDetailsFragment : Fragment() {
 
         override fun onBindViewHolder(holder: CommentItemViewHolder, position: Int) {
             val item = values[position]
+            holder.commentNameTextView.text = item.name
             holder.commentBodyTextView.text = item.body
+            holder.commentEmailTextView.text = item.email
         }
 
         override fun getItemCount() = values.size
@@ -127,7 +141,9 @@ class PostDetailsFragment : Fragment() {
 
         inner class CommentItemViewHolder(binding: ItemCommentBinding) :
             RecyclerView.ViewHolder(binding.root) {
+            val commentNameTextView: TextView = binding.commentNameTextView
             val commentBodyTextView: TextView = binding.commentBodyTextView
+            val commentEmailTextView: TextView = binding.commentEmailTextView
         }
 
     }
