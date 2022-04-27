@@ -8,7 +8,7 @@ import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.data.dto.PostComment
 import com.edwinderepuesto.jpclient.data.dto.User
 import com.edwinderepuesto.jpclient.data.repository.MainRepository
-import io.ktor.utils.io.errors.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(private val repository: MainRepository) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val repository: MainRepository) : ViewModel() {
     private val _postsState = MutableStateFlow<MyResult<List<Post>>>(MyResult.Loading(false))
     val postsState: StateFlow<MyResult<List<Post>>> = _postsState.asStateFlow()
 

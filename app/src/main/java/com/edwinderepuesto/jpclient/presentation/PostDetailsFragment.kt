@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +18,7 @@ import com.edwinderepuesto.jpclient.data.dto.PostComment
 import com.edwinderepuesto.jpclient.databinding.FragmentPostDetailsBinding
 import com.edwinderepuesto.jpclient.databinding.ItemCommentBinding
 import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModel
-import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
@@ -27,8 +27,10 @@ import kotlinx.coroutines.launch
  * in two-pane mode (on larger screen devices) or self-contained
  * on handsets.
  */
+
+@AndroidEntryPoint
 class PostDetailsFragment : Fragment() {
-    private lateinit var viewModel: MainViewModel
+    val viewModel: MainViewModel by activityViewModels()
 
     private var _binding: FragmentPostDetailsBinding? = null
 
@@ -40,10 +42,6 @@ class PostDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModelFactory = MainViewModelFactory(requireActivity())
-        viewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
-
         _binding = FragmentPostDetailsBinding.inflate(inflater, container, false)
         val rootView = binding.root
 

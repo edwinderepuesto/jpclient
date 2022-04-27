@@ -9,8 +9,8 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
@@ -21,7 +21,7 @@ import com.edwinderepuesto.jpclient.data.dto.Post
 import com.edwinderepuesto.jpclient.databinding.FragmentPostListBinding
 import com.edwinderepuesto.jpclient.databinding.ItemPostBinding
 import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModel
-import com.edwinderepuesto.jpclient.presentation.viewmodel.MainViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -32,8 +32,9 @@ import kotlinx.coroutines.launch
  * items and item details side-by-side using two vertical panes.
  */
 
+@AndroidEntryPoint
 class PostListFragment : Fragment() {
-    private lateinit var viewModel: MainViewModel
+    val viewModel: MainViewModel by activityViewModels()
 
     private lateinit var adapter: PostRecyclerViewAdapter
 
@@ -47,10 +48,6 @@ class PostListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModelFactory = MainViewModelFactory(requireActivity())
-        viewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[MainViewModel::class.java]
-
         _binding = FragmentPostListBinding.inflate(inflater, container, false)
         return binding.root
 
