@@ -1,5 +1,9 @@
 # JP Client
  JSONPlaceholder Client written in Kotlin
+ 
+https://user-images.githubusercontent.com/26127503/165461676-a42c61fc-c668-467a-90bf-00c0e5e26648.mp4
+
+
 
 ## Highlights: ##
 - Kotlin, MVVM, coroutines.
