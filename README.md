@@ -9,6 +9,8 @@
 - Shows loading status for API requests.
 - Can dismiss one or all posts.
 - Swipe to refresh.
-- Supports both phones and tablets.
-- Persists favorite status, preserved if app is killed.
+- Adaptive layout. Supports both phones (single pane) and tablets (two-pane).
+- Post can be marked as favorite
+  - Favorite posts are move to the top of the list
+  - Favorite status is also persisted, even if the app is killed.
 - Coroutine-safe unit tests.
