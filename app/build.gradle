@@ -43,6 +43,7 @@ kapt {
 }
 
 dependencies {
+    // Core/defaults...
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -53,23 +54,30 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    // Ktor...
-    implementation 'io.ktor:ktor-client-android:2.0.0'
-    implementation 'io.ktor:ktor-client-content-negotiation:2.0.0'
-    implementation 'io.ktor:ktor-client-logging-jvm:2.0.0'
-    implementation 'io.ktor:ktor-serialization-kotlinx-json:2.0.0'
-
-    // Room...
-    implementation "androidx.room:room-ktx:2.4.2"
-    kapt "androidx.room:room-compiler:2.4.2"
 
     // Hilt dependency injection...
     implementation("com.google.dagger:hilt-android:2.41")
     kapt("com.google.dagger:hilt-android-compiler:2.41")
 
+    // Ktor HTTP client...
+    implementation 'io.ktor:ktor-client-android:2.0.0'
+    implementation 'io.ktor:ktor-client-content-negotiation:2.0.0'
+    implementation 'io.ktor:ktor-client-logging-jvm:2.0.0'
+    implementation 'io.ktor:ktor-serialization-kotlinx-json:2.0.0'
+
+    // Room local database...
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+
+    // Swipe to refresh:
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    // Unit testing core...
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.1"
+
+    // Mocks:
+    testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
+    testImplementation "org.mockito:mockito-inline:4.5.1"
 }
